@@ -16,21 +16,7 @@ module CRake
     puts "Defined driver #{name}"
   end
 
-  class LibraryDsl
-    def initialize(library_name)
-      @name = library_name
-      @config = {}
-    end
-
-    def user_land
-      @config[:target_land] = :user
-    end
-
-    def type(library_type)
-      raise "Incorrect library type" if not [:static, :dynamic].member? library_type
-      @config[:library_type] = library_type
-    end
-
+  class ProjectDsl
     def source(filepath)
       @config[:source_files] ||= []
       @config[:source_files] << filepath
@@ -58,6 +44,22 @@ module CRake
 
     def config
       @config
+    end
+  end
+
+  class LibraryDsl < ProjectDsl
+    def initialize(library_name)
+      @name = library_name
+      @config = {}
+    end
+
+    def user_land
+      @config[:target_land] = :user
+    end
+
+    def type(library_type)
+      raise "Incorrect library type" if not [:static, :dynamic].member? library_type
+      @config[:library_type] = library_type
     end
   end
 end
