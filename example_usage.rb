@@ -1,6 +1,11 @@
+loki_dir = 'D:\dev\loki'
+tomcrypt_dir = 'D:\dev\tomcrypt'
+win_sdk_dir = 'D:\dev\winsdk\win7'
+path_to_top = '..'
+
 library 'tdlib', :type => :static do
 
-  target_land :user # executes in user mode or kernel mode?
+  user_land # executes in user mode or kernel mode?
 
   type :static # this way instead of the hash in the library call above? or support both ways?
 
@@ -49,7 +54,7 @@ driver 'scsitmd' do
   source './string_pack.c'
 
   define 'OS_64BIT' if config[:target_arch] == :intel64
-  define 'XMALLOC=malloc_kernel' # is there a better way to define (name, value) pairs?
+  define :XMALLOC => 'malloc_kernel'  # == /DXMALLOC=malloc_kernel
 
   include_dir "#{tomcrypt_dir}/src/headers"
 
