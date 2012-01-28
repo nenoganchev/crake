@@ -8,8 +8,8 @@ module CRake
     LibraryDsl.new(name).instance_eval &block
   end
 
-  def executable(name, args = {})
-    puts "Defined executable #{name}"
+  def executable(name, args = {}, &block)
+    ExecutableDsl.new(name).instance_eval &block
   end
 
   def driver(name, args = {})
@@ -60,6 +60,13 @@ module CRake
     def type(library_type)
       raise "Incorrect library type" if not [:static, :dynamic].member? library_type
       @config[:library_type] = library_type
+    end
+  end
+
+  class ExecutableDsl < ProjectDsl
+    def initialize(executable_name)
+      @name = executable_name
+      @config = { :target_land => :user }
     end
   end
 end
