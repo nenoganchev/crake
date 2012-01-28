@@ -12,8 +12,8 @@ module CRake
     ExecutableDsl.new(name).instance_eval &block
   end
 
-  def driver(name, args = {})
-    puts "Defined driver #{name}"
+  def driver(name, args = {}, &block)
+    DriverDsl.new(name).instance_eval &block
   end
 
   class ProjectDsl
@@ -67,6 +67,13 @@ module CRake
     def initialize(executable_name)
       @name = executable_name
       @config = { :target_land => :user }
+    end
+  end
+
+  class DriverDsl < ProjectDsl
+    def initialize(driver_name)
+      @name = driver_name
+      @config = { :target_land => :kernel }
     end
   end
 end
