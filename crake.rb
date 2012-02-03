@@ -10,6 +10,7 @@ crake_dir = File.expand_path(File.dirname(__FILE__))
 crake_lib_dir = File.join(crake_dir, 'lib')
 $LOAD_PATH.unshift crake_lib_dir unless $LOAD_PATH.include? crake_lib_dir
 require 'crake/dsl'
+require 'crake/defined_tasks'
 
 #
 # extend the top-level object with the DSL module, so that the namespace pollution we cause is minimal
@@ -36,3 +37,5 @@ end
 #
 
 require File.join Dir.pwd, crakefile
+
+puts "defined tasks: #{DefinedTasks.get}"

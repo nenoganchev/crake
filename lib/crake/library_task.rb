@@ -2,7 +2,7 @@ require 'crake/project_task'
 
 class LibraryTask < ProjectTask
   def initialize(library_name)
-    @name = library_name
+    super library_name
     @config = {}
   end
 

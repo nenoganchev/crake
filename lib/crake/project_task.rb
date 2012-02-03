@@ -1,4 +1,10 @@
 class ProjectTask
+  #attr_accessor :name
+
+  def initialize(project_name)
+    @name = project_name
+  end
+
   def source_file(filepath)
     @config[:source_files] ||= []
     @config[:source_files] << filepath
@@ -26,5 +32,9 @@ class ProjectTask
 
   def config
     @config
+  end
+
+  def to_s
+    @name
   end
 end
