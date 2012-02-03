@@ -1,5 +1,5 @@
 class ProjectTask
-  def source(filepath)
+  def source_file(filepath)
     @config[:source_files] ||= []
     @config[:source_files] << filepath
   end

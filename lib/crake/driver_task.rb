@@ -1,4 +1,4 @@
-require './crake/project_task'
+require 'crake/project_task'
 
 class DriverTask < ProjectTask
   def initialize(driver_name)

@@ -1,4 +1,4 @@
-require './crake/project_task'
+require 'crake/project_task'
 
 class LibraryTask < ProjectTask
   def initialize(library_name)

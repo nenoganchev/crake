@@ -1,4 +1,4 @@
-require './crake/project_task'
+require 'crake/project_task'
 
 class ExecutableTask < ProjectTask
   def initialize(executable_name)

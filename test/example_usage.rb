@@ -10,10 +10,10 @@ library 'tdlib', :type => :static do
   type :static # this way instead of the hash in the library call above? or support both ways?
 
   # list the source files
-  source '../target_driver/string_pack.c'
-  source './target_driver.cpp'
-  source './scsi_disk.cpp'
-  source './log.cpp'
+  source_file '../target_driver/string_pack.c'
+  source_file './target_driver.cpp'
+  source_file './scsi_disk.cpp'
+  source_file './log.cpp'
 
   # list the necessary defines
   define '_LIB'
@@ -37,9 +37,9 @@ end
 executable 'tdsvc' do
   # target_land :user is implied
 
-  source './settings.cpp'
-  source './service.cpp'
-  source './web_server.cpp'
+  source_file './settings.cpp'
+  source_file './service.cpp'
+  source_file './web_server.cpp'
 
   include_dir "#{loki_dir}/include"
 
@@ -50,8 +50,8 @@ end
 driver 'scsitmd' do
   # target_land :kernel is implied
 
-  source './scsitmd.c'
-  source './string_pack.c'
+  source_file './scsitmd.c'
+  source_file './string_pack.c'
 
   define 'OS_64BIT' if config[:target_arch] == :intel64
   define :XMALLOC => 'malloc_kernel'  # == /DXMALLOC=malloc_kernel

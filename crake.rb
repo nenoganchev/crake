@@ -1,6 +1,15 @@
 #!ruby
 
-require './crake/dsl'
+gem 'rake', '~> 0.9.2'
+require 'rake'
+
+#
+# setup the load path so that we can require crake's files from any dir
+#
+crake_dir = File.expand_path(File.dirname(__FILE__))
+crake_lib_dir = File.join(crake_dir, 'lib')
+$LOAD_PATH.unshift crake_lib_dir unless $LOAD_PATH.include? crake_lib_dir
+require 'crake/dsl'
 
 #
 # extend the top-level object with the DSL module, so that the namespace pollution we cause is minimal

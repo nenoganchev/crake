@@ -1,6 +1,6 @@
-require './crake/library_task'
-require './crake/executable_task'
-require './crake/driver_task'
+require 'crake/library_task'
+require 'crake/executable_task'
+require 'crake/driver_task'
 
 #
 # define the DSL in a separate module
