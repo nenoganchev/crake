@@ -1,7 +1,6 @@
 require 'crake/library_task'
 require 'crake/executable_task'
 require 'crake/driver_task'
-require 'crake/defined_tasks'
 
 #
 # define the DSL in a separate module
@@ -9,21 +8,15 @@ require 'crake/defined_tasks'
 
 module CRake
   def library(name, args = {}, &block)
-    task = LibraryTask.new(name)
-    task.instance_eval &block
-    DefinedTasks.add task
+    LibraryTask.new(name).instance_eval &block
   end
 
   def executable(name, args = {}, &block)
-    task = ExecutableTask.new(name)
-    task.instance_eval &block
-    DefinedTasks.add task
+    ExecutableTask.new(name).instance_eval &block
   end
 
   def driver(name, args = {}, &block)
-    task = DriverTask.new(name)
-    task.instance_eval &block
-    DefinedTasks.add task
+    DriverTask.new(name).instance_eval &block
   end
 end
 

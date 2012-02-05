@@ -1,6 +1,9 @@
 class ProjectTask
+  @@defined_tasks = []
+
   def initialize(project_name)
     @name = project_name
+    @@defined_tasks << self
   end
 
   def source_file(filepath)
@@ -34,5 +37,9 @@ class ProjectTask
 
   def to_s
     @name
+  end
+
+  def self.get_defined_tasks
+    @@defined_tasks
   end
 end
