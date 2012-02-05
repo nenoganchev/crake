@@ -36,6 +36,9 @@ end
 # process the user's crakefile itself
 #
 
-require File.join Dir.pwd, crakefile
-
-puts "defined tasks: #{DefinedTasks.get}"
+crakefile_path = File.join(Dir.pwd, crakefile)
+crakefile_dir = File.dirname(crakefile_path)
+# set the pwd to the crakefile's directory before requiring it so that requires from the crakefile will work with paths
+# relative to the crakefile itself
+Dir.chdir crakefile_dir
+require crakefile_path
