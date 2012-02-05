@@ -40,7 +40,7 @@ module CRake
       @name
     end
 
-    def self.get_defined_tasks
+    def self.get_defined
       @@defined_tasks
     end
   end
