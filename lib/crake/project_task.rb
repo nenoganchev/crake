@@ -27,9 +27,14 @@ module CRake
       @config[:library_dirs] << new_library_dir
     end
 
-    def link(linked_library)
+    def lib(linked_library)
       @config[:libraries] ||= []
       @config[:libraries] << linked_library
+    end
+
+    def rc_define(new_define)
+      @config[:rc_defines] ||= []
+      @config[:rc_defines] << new_define
     end
 
     def config
