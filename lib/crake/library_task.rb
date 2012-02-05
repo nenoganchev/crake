@@ -1,17 +1,19 @@
 require 'crake/project_task'
 
-class LibraryTask < ProjectTask
-  def initialize(library_name)
-    super library_name
-    @config = {}
-  end
+module CRake
+  class LibraryTask < ProjectTask
+    def initialize(library_name)
+      super library_name
+      @config = {}
+    end
 
-  def user_land
-    @config[:target_land] = :user
-  end
+    def user_land
+      @config[:target_land] = :user
+    end
 
-  def type(library_type)
-    raise "Incorrect library type" if not [:static, :dynamic].member? library_type
-    @config[:library_type] = library_type
+    def type(library_type)
+      raise "Incorrect library type" if not [:static, :dynamic].member? library_type
+      @config[:library_type] = library_type
+    end
   end
 end
