@@ -74,10 +74,9 @@ require crakefile_path
 # now build the specified projects
 #
 
-defined_tasks = CRake::ProjectTask.get_defined
-target_index = defined_tasks.find_index { |t| t.name == target }
-if target_index == nil
+target_task = CRake::ProjectTask.get_defined.find { |t| t.name == target }
+if target_task == nil
   puts "[crake] error: target #{target} not found"
   exit 1
 end
-defined_tasks[target_index].build
+target_task.build
