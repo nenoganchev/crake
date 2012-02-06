@@ -2,6 +2,7 @@
 
 gem 'rake', '~> 0.9.2'
 require 'rake'
+require 'optparse'
 
 #
 # setup the load path so that we can require crake's files from any dir
@@ -21,21 +22,47 @@ self.extend CRake
 # process the command-line arguments
 #
 
-crakefile = ARGV[0]
-if crakefile == nil
-  puts "[crake] error: expected the name of the crakefile as the first argument"
+options = {}
+OptionParser.new do |opts|
+  options[:crakefile] = 'CRakefile.rb'
+
+  opts.on('-f', '--file CRAKEFILE', 'Specify which crakefile to process') do |f|
+    options[:crakefile] = f
+  end
+
+  opts.on_tail('-h', '--help', 'Shows this help message') do
+    puts opts
+    exit
+  end
+end.parse!
+
+if not File.exists? options[:crakefile]
+  puts "[crake] error: crakefile '#{options[:crakefile]}' does not exist"
   exit 1
 end
-if not File.exists? crakefile
-  puts "[crake] error: crakefile '#{crakefile}' does not exist"
-  exit 1
+
+# ARGV is left with the unprocessed arguments. The first one should be the target to be built, and the rest - parameters
+# that will go in crake's environment
+target = ARGV.shift || "default"
+if target.include? '='
+  ARGV.unshift target
+  target = "default"
+end
+
+env = {}
+ARGV.each do |arg|
+  if arg =~ /(?<lhs>.*)=(?<rhs>.*)/
+    env[Regexp.last_match(:lhs)] = Regexp.last_match(:rhs)
+  else
+    env[arg] = true
+  end
 end
 
 #
 # process the user's crakefile itself
 #
 
-crakefile_path = File.join(Dir.pwd, crakefile)
+crakefile_path = File.join(Dir.pwd, options[:crakefile])
 crakefile_dir = File.dirname(crakefile_path)
 # set the pwd to the crakefile's directory before requiring it so that requires from the crakefile will work with paths
 # relative to the crakefile itself
