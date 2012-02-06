@@ -2,9 +2,8 @@ require 'crake/project_task'
 
 module CRake
   class LibraryTask < ProjectTask
-    def initialize(library_name)
-      super library_name
-      @config = {}
+    def initialize(library_name, args)
+      super library_name, args
     end
 
     def user_land

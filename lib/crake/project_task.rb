@@ -1,6 +1,7 @@
 gem 'rake', '~> 0.9.2'
 
 require 'rake'
+require 'crake/configuration'
 
 module CRake
   class ProjectTask
@@ -11,8 +12,10 @@ module CRake
 
     @@defined_tasks = []
 
-    def initialize(project_name)
+    def initialize(project_name, args)
       @name = project_name
+      @product_name = args[:product]
+      @config = Configuration.get_defined.find { |c| c.name == args[:config] } || Configuration.new
       @project_dir = Dir.pwd
       @@defined_tasks << self
     end

@@ -9,15 +9,15 @@ require 'crake/configuration.rb'
 
 module CRake
   def library(name, args = {}, &block)
-    LibraryTask.new(name).instance_eval &block
+    LibraryTask.new(name, args).instance_eval &block
   end
 
   def executable(name, args = {}, &block)
-    ExecutableTask.new(name).instance_eval &block
+    ExecutableTask.new(name, args).instance_eval &block
   end
 
   def driver(name, args = {}, &block)
-    DriverTask.new(name).instance_eval &block
+    DriverTask.new(name, args).instance_eval &block
   end
 
   def configuration(name, args = {}, &block)
