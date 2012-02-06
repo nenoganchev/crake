@@ -26,8 +26,8 @@ library 'tdlib', :type => :static do
 
   # list the required libraries. note that they are used not when building the library, but when building the
   # executables which link to this library
-  link "Advapi32.lib"
-  link "#{tomcrypt_dir}/#{config[:target_arch]}/user/tomcrypt.lib"
+  lib "Advapi32.lib"
+  lib "#{tomcrypt_dir}/#{config[:target_arch]}/user/tomcrypt.lib"
 
   # instruct the linker where to look for libraries
   library_dir "#{win_sdk_dir}/lib/#{config[:target_arch]}"
@@ -43,7 +43,7 @@ executable 'tdsvc' do
 
   include_dir "#{loki_dir}/include"
 
-  link 'tdlib' # figure out that this library is defined here and link to its full path, wherever this is
+  lib 'tdlib' # figure out that this library is defined here and link to its full path, wherever this is
 end
 
 
@@ -58,5 +58,5 @@ driver 'scsitmd' do
 
   include_dir "#{tomcrypt_dir}/src/headers"
 
-  link "#{tomcrypt_dir}/#{config[:target_arch]}/kernel/tomcrypt.lib"
+  lib "#{tomcrypt_dir}/#{config[:target_arch]}/kernel/tomcrypt.lib"
 end
