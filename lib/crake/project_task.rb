@@ -1,3 +1,7 @@
+gem 'rake', '~> 0.9.2'
+
+require 'rake'
+
 module CRake
   class ProjectTask
 
