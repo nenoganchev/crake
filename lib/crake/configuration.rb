@@ -21,5 +21,17 @@ module CRake
     def []=(key, value)
       @store[key] = value
     end
+
+    #
+    # DSL-implementing methods
+    #
+
+    def out_dir(dir)
+      @store[:out_dir] = dir
+    end
+
+    def int_dir(dir)
+      @store[:int_dir] = dir
+    end
   end
 end
