@@ -11,6 +11,7 @@ crake_dir = File.expand_path(File.dirname(__FILE__))
 crake_lib_dir = File.join(crake_dir, 'lib')
 $LOAD_PATH.unshift crake_lib_dir unless $LOAD_PATH.include? crake_lib_dir
 require 'crake/dsl'
+require 'crake/project_task'
 
 #
 # extend the top-level object with the DSL module, so that the namespace pollution we cause is minimal
@@ -68,3 +69,15 @@ crakefile_dir = File.dirname(crakefile_path)
 # relative to the crakefile itself
 Dir.chdir crakefile_dir
 require crakefile_path
+
+#
+# now build the specified projects
+#
+
+defined_tasks = CRake::ProjectTask.get_defined
+target_index = defined_tasks.find_index { |t| t.name == target }
+if target_index == nil
+  puts "[crake] error: target #{target} not found"
+  exit 1
+end
+defined_tasks[target_index].build

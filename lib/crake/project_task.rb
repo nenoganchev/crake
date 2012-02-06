@@ -1,10 +1,26 @@
 module CRake
   class ProjectTask
+
+    #
+    # initialization
+    #
+
     @@defined_tasks = []
 
     def initialize(project_name)
       @name = project_name
+      @project_dir = Dir.pwd
       @@defined_tasks << self
+    end
+
+    #
+    # DSL-implementing methods
+    #
+
+    def name(name = nil)
+      # name is also used by crake's implementation as a getter, so return the name
+      @name = name if name
+      @name
     end
 
     def source_file(filepath)
@@ -37,9 +53,17 @@ module CRake
       @config[:rc_defines] << new_define
     end
 
+    #
+    # non-DSL methods intended to be used by the client
+    #
+
     def config
       @config
     end
+
+    #
+    # methods not intended for use by the client (intended for crake's implementation)
+    #
 
     def to_s
       @name
@@ -47,6 +71,10 @@ module CRake
 
     def self.get_defined
       @@defined_tasks
+    end
+
+    def build
+      puts "---- Building project #{@name}"
     end
   end
 end
