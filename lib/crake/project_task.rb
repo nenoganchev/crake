@@ -2,9 +2,12 @@ gem 'rake', '~> 0.9.2'
 
 require 'rake'
 require 'crake/configuration'
+require 'crake/compiler_utils'
 
 module CRake
   class ProjectTask
+
+    include CompilerUtils
 
     #
     # initialization
@@ -82,6 +85,32 @@ module CRake
 
     def build
       puts "---- Building project #{@name}"
+
+      # define project task
+      project_task = Rake::Task.define_task @name
+
+      # define a file task for each source file that needs to be compiled
+      object_files = {}
+      @config[:source_files].each do |src_name|
+        src_path = File.join(@project_dir, src_name)
+        obj_file = File.join(@config[:int_dir], src_name.ext('obj'))
+        object_files[src_path] = obj_file
+      end
+      object_files.each do |src, obj|
+        Rake::FileTask.define_task obj => [src] do
+          compile src, @config, obj
+        end
+        project_task.enhance [obj]  # add the current object file as a prerequisite for the project task
+      end
+
+      # add a recipe for the project task
+      project_task.enhance do
+        link object_files.values,
+             @config,
+             File.join(@config[:out_dir], @name)
+      end
+
+      project_task.invoke
     end
   end
 end
