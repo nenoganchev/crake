@@ -21,10 +21,20 @@ module CRake
       end
 
       # add include dirs
+      config[:include_dirs].each { |dir| compiler_flags << "/I \"#{dir.gsub('/', '\\')}\"" }
 
       # add defines
+      config[:defines].each do |define|
+        if define.is_a? Hash
+          raise "Define hash #{define} should have only one element" if define.size != 1
+          define, value = define.first
+          compiler_flags << "/D#{define}=#{value}"
+        else
+          compiler_flags << "/D#{define}"
+        end
+      end
 
-      puts "[CC] #{source_file} #{compiler_flags} -o #{object_file}"
+      puts "[CC] #{compiler_flags.join(" ")} \"#{source_file}\" /Fo#{object_file}"
     end
 
     def link(object_files, config, linked_file)

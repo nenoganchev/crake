@@ -65,6 +65,19 @@ module CRake
       @store[:debug_info_format] = format
     end
 
+    # TODO: the project class should inherit from this class and when that happens, the methods below will no longer
+    #       be duplicated
+
+    def define(new_define)
+      @store[:defines] ||= []
+      @store[:defines] << new_define
+    end
+
+    def include_dir(new_include_dir)
+      @store[:include_dirs] ||= []
+      @store[:include_dirs] << new_include_dir
+    end
+
     private
 
     def map_to_bool(value)
