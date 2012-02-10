@@ -3,17 +3,23 @@ tomcrypt_dir = 'D:\dev\tomcrypt'
 win_sdk_dir = 'D:\dev\winsdk\win7'
 path_to_top = '..'
 
-library 'tdlib', :type => :static do
+configuration 'testcfg' do
+  out_dir "out"
+  int_dir "out/int"
+  target_arch :x86_64
+end
+
+library 'tdlib', :type => :static, :config => 'testcfg' do
 
   user_land # executes in user mode or kernel mode?
 
   type :static # this way instead of the hash in the library call above? or support both ways?
 
   # list the source files
-  source_file '../target_driver/string_pack.c'
-  source_file './target_driver.cpp'
-  source_file './scsi_disk.cpp'
-  source_file './log.cpp'
+  source_file 'src/drv/string_pack.c'
+  source_file 'src/lib/target_driver.cpp'
+  source_file 'src/lib/scsi_disk.cpp'
+  source_file 'src/lib/log.cpp'
 
   # list the necessary defines
   define '_LIB'
@@ -34,12 +40,12 @@ library 'tdlib', :type => :static do
 end
 
 
-executable 'tdsvc' do
+executable 'tdsvc', :config => 'testcfg' do
   # target_land :user is implied
 
-  source_file './settings.cpp'
-  source_file './service.cpp'
-  source_file './web_server.cpp'
+  source_file 'src/svc/settings.cpp'
+  source_file 'src/svc/service.cpp'
+  source_file 'src/svc/web_server.cpp'
 
   include_dir "#{loki_dir}/include"
 
@@ -47,11 +53,11 @@ executable 'tdsvc' do
 end
 
 
-driver 'scsitmd' do
+driver 'scsitmd', :config => 'testcfg' do
   # target_land :kernel is implied
 
-  source_file './scsitmd.c'
-  source_file './string_pack.c'
+  source_file 'src/drv/scsitmd.c'
+  source_file 'src/drv/string_pack.c'
 
   define 'OS_64BIT' if config[:target_arch] == :intel64
   define :XMALLOC => 'malloc_kernel'  # == /DXMALLOC=malloc_kernel
