@@ -65,6 +65,11 @@ module CRake
       @store[:debug_info_format] = format
     end
 
+    def target_arch(arch)
+      raise "Incorrect architecture '#{arch}'" if not [:x86, :x86_64].include? arch
+      @store[:target_arch] = arch
+    end
+
     # TODO: the project class should inherit from this class and when that happens, the methods below will no longer
     #       be duplicated
 
