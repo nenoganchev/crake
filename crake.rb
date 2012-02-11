@@ -15,7 +15,7 @@ require 'crake/project_task'
 # extend the top-level object with the DSL module, so that the namespace pollution we cause is minimal
 #
 
-self.extend CRake
+self.extend CRake::DSL
 
 #
 # process the command-line arguments
