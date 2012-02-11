@@ -6,19 +6,16 @@ module CRake
       compiler_flags = ["/nologo", "/errorReport:none", "/c"]
 
       # add compiler options
-      {
+      supported_compiler_options = {
         :buffer_security_checks => { true => "/GS", false => "/GS-"},
         :ignore_standard_include_paths => { true => "/X" },
         :calling_convention => { :cdecl => "/Gd", :fastcall => "/Gr", :stdcall => "/Gz" },
         :compiler_warnings_as_errors => { true => "/WX" },
         :warning_level => Hash[ (0..4).map { |n| [n, "/W#{n}"] } ],
         :debug_info_format => { :c7_compatible => "/Z7", :pdb => "/Zi", :pdb_edit_continue => "/ZI" },
-      }.each do |setting_name, setting_flags|
-        if config.has_key? setting_name
-          setting_flag = setting_flags[config[setting_name]]
-          compiler_flags << setting_flag if setting_flag  # setting_flag may be nil when a compiler flag doesn't have an opposite
-        end
-      end
+      }
+
+      add_supported_option_flags(compiler_flags, config, supported_compiler_options)
 
       # add include dirs
       config[:include_dirs].each { |dir| compiler_flags << "/I \"#{dir.gsub('/', '\\')}\"" }
@@ -39,6 +36,17 @@ module CRake
 
     def link(object_files, config, linked_file)
       puts "[LINK] #{linked_file} from #{object_files}"
+    end
+
+    private
+
+    def add_supported_option_flags(options_list, config, supported_options)
+      supported_options.each do |option_name, supported_option_values|
+        if config.has_key? option_name
+          option_flag = supported_option_values[config[option_name]]
+          options_list << option_flag if option_flag  # option_flag may be nil if the current option value is not supported
+        end
+      end
     end
   end
 end
