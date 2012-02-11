@@ -83,6 +83,52 @@ module CRake
       @store[:include_dirs] << new_include_dir
     end
 
+    def driver(value)
+      @store[:driver] = map_to_bool(value)
+    end
+
+    def ignore_default_libraries(*libs)
+      @store[:ignore_default_libs] ||= []
+      @store[:ignore_default_libs] |= libs
+    end
+
+    def eliminate_unreferenced_functions(value)
+      @store[:opt_ref] = map_to_bool(value)
+    end
+
+    def entry(entry_function_name)
+      @store[:entry] = entry_function_name
+    end
+
+    def subsystem(subsystem_name)
+      subsystem_name = subsystem_name.to_sym if subsystem_name.is_a? String
+      raise "Incorrect subsystem '#{subsystem_name}'" if not [:native, :windows, :console].member? subsystem_name
+      @store[:subsystem] = subsystem_name
+    end
+
+    def merge(sections)
+      raise "Expected a map of section names that are to be merged" if not sections.is_a? Hash
+      @store[:merge] = sections
+    end
+
+    def incremental_linking(value)
+      @store[:incremental] = map_to_bool(value)
+    end
+
+    def create_debug_info(value)
+      @store[:create_debug_info] = map_to_bool(value)
+    end
+
+    def lib_dir(dir)
+      @store[:lib_dirs] ||= []
+      @store[:lib_dirs] << dir
+    end
+
+    def lib(library_name)
+      @store[:libraries] ||= []
+      @store[:libraries] << library_name
+    end
+
     private
 
     def map_to_bool(value)

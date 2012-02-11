@@ -35,7 +35,50 @@ module CRake
     end
 
     def link(object_files, config, linked_file)
-      puts "[LINK] #{linked_file} from #{object_files}"
+      linker_flags = ["/nologo", "/errorReport:none"]
+
+      # add linker options
+      supported_linker_options = {
+        :driver => { true => "/DRIVER" },
+        :opt_ref => { true => "/OPT:REF", false => "/OPT:NOREF" },
+        :subsystem => { :native => "/SUBSYSTEM:NATIVE", :windows => "/SUBSYSTEM:WINDOWS", :console => "/SUBSYSTEM:CONSOLE" },
+        :incremental => { true => "/INCREMENTAL", false => "/INCREMENTAL:NO" },
+        :create_debug_info => { true => "/DEBUG" },
+      }
+
+      add_supported_option_flags(linker_flags, config, supported_linker_options)
+
+      # ignore default libs option requires special handling
+      if config.has_key? :ignore_default_libs
+        if config[:ignore_default_libs].empty?
+          linker_flags << "/NODEFAULTLIB"
+        else
+          config[:ignore_default_libs].each do |ignored_lib|
+            linker_flags << "/NODEFAULTLIB:#{ignored_lib}"
+          end
+        end
+      end
+
+      # custom entry point option requires special handling
+      linker_flags << %Q{/ENTRY:"#{config[:entry]}"} if config.has_key? :entry
+
+      # merge sections option requires special handling
+      if config.has_key? :merge
+        config[:merge].each { |from, to| linker_flags << "/MERGE:#{from}=#{to}" }
+      end
+
+      # add library dirs
+      config[:lib_dirs].each { |dir| linker_flags << %Q{/LIBPATH:"#{dir.gsub('/', '\\')}"} }
+
+      # add the output file
+      linker_flags << %Q{/OUT:"#{linked_file}"}
+
+      invocation = %w{ [LINK] }
+      invocation << linker_flags.join(" ")
+      invocation << object_files.join(" ")
+      invocation << config[:libraries].map { |libname| %Q{"#{libname}"} }.join(" ")
+
+      puts invocation.join(" ")
     end
 
     private
