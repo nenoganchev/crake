@@ -4,6 +4,8 @@ configuration 'tdcfg' do
   out_dir File.join PATH_TO_TOP, "build/crake/target_driver"
   int_dir File.join PATH_TO_TOP, "build/crake/target_driver/int"
 
+  # compiler options
+
   buffer_security_checks :off
   ignore_standard_include_paths true
   calling_convention :stdcall
@@ -35,6 +37,26 @@ configuration 'tdcfg' do
   include_dir File.join($WDK_DIR, "inc/api")
   include_dir File.join($WDK_DIR, "inc/ddk")
   include_dir File.join($VS_DIR, "VC/include")
+
+  # linker options
+
+  driver true
+  ignore_default_libraries
+  eliminate_unreferenced_functions :on
+  entry "DriverEntry"
+  subsystem :native
+  merge ".rdata" => ".text"
+  incremental_linking :off
+  create_debug_info :on
+
+  lib_dir File.join($WDK_DIR, "lib/wnet/amd64")
+  lib_dir File.join($SDK_DIR, "lib/x64")
+  lib_dir File.join($VS_DIR, "VC/ATLMFC/LIB/amd64")
+  lib_dir File.join($VS_DIR, "VC/LIB/amd64")
+
+  lib "ntoskrnl.lib"
+  lib "libcntpr.lib"
+  lib "hal.lib"
 end
 
 $RC_PRODUCT_VERSION = '1.0.0'
