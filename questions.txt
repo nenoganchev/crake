@@ -1,0 +1,28 @@
+1. How to integrate crakefile syntax in a common rakefile? Ideal result would be something like this:
+
+driver "scsitmd" do
+  ... describe driver here ...
+end
+
+task "sign" => scsitmd do
+  sh "signtool.exe scsitmd.sys"
+end
+
+task "upload" => "sign" do
+  File.copy "scsitmd.sys" $UPLOAD_DIR
+end
+
+2. How to implement an analog of make's late-binding variables? Use case:
+
+configuration "common_cfg" do
+  out_dir "build/#{@name}/#{@config[:target_arch]}"
+end
+
+library "cmnlib", :config => "common_cfg" do
+  ... name is defined here as "cmnlib", but after "common_cfg" is created
+  target_arch :x86_64
+end
+
+The problem is that by the time target architecture and project name are defined, out_dir has already been evaluated.
+Ideally, the string passed to out_dir should be evaluated/constructed at the time it is really needed, which is after
+the project has been fully defined.
